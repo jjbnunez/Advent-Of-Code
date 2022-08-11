@@ -40,7 +40,7 @@ end
 print("Done!")
 print("")
 
-if (a ~= nil and b ~= nil) then
+if (a ~= nil and b ~= nil and c~= nil) then
     print("Sum found. Multiplication yields:")
     print(a*b*c)
 else
