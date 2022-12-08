@@ -84,8 +84,6 @@ def solve2(data):
 	
 	print("The total summed value of every group of three's badges is", sum)	
 	return
-
-	return
 	
 def main():
     # Get arg from command line
