@@ -5,6 +5,7 @@ Solution written by JJ Nunez.
 """
 
 import sys
+import os
 
 # Debug function to show raw string list
 # that we read in from the file
@@ -50,62 +51,111 @@ def _getStackCount(crateData):
 	lengthOfLastLine = len(crateData[-1])
 	return int(''.join(crateData[-1][lengthOfLastLine-2]))
 
-# Function to prepare an empty stack data structure
-def _getEmptyListOfStacks(crateData):
-	# This function assumes that the second-to-last
-	# character of the last crate data line is a
-	# single-digit integer value
-	stackCount = _getStackCount(crateData)
-	listOfStacks = []
-	for _ in range(stackCount):
-		stack = []
-		listOfStacks.append(stack)
-
 # Function to get a list of indices
 # for each stack column
 def _getStackColumnIndices(crateData):
 	line = crateData[-1]
 	indices = []
-	for index, character in line:
+	for index, character in enumerate(line):
 		if ''.join(character).isdigit():
 			indices.append(index)
+	return indices
 
 # Function to get the stack at a given column index
-def _getStack(crateData, stackColumnIndex):
+def _getStack(crateData, columnIndex):
 	stack = []
-	for rowIndex, line in reversed(crateData):
+	for rowIndex, line in enumerate(reversed(crateData)):
 		if rowIndex == 0:
 			continue
-		stack.append(''.join(line[stackColumnIndex]))
-	print("DEBUG: stack at", rowIndex, stackColumnIndex, "is", stack)
+		if line[columnIndex].isalpha() == False:
+			break
+		stack.append(line[columnIndex])
+	return stack	
 
 # Function to populate an empty stack data structure
-def _populateListOfStacks(crateData, emptyListOfStacks):
+def _populateListOfStacks(crateData):
 	# We start from the bottom of the raw input data
 	# and move our way up.
 	# First determine the indices of each column ID.
-	listOfStacks = emptyListOfStacks.copy()	
 	stackColumnIndices = _getStackColumnIndices(crateData)
-	_getStack(crateData, stackColumnIndices[0])
+	listOfStacks = []
+	for item in stackColumnIndices:
+		stack = _getStack(crateData, item)
+		listOfStacks.append(stack)
+	return listOfStacks
+
+def _populateListOfMoves(moveData):
+	counts = []
+	froms = []
+	tos = []
+	for line in moveData:
+		tokens = line.split(' ')
+		counts.append(int(tokens[1]))
+		froms.append(int(tokens[3]))
+		tos.append(int(tokens[5]))
+	listOfMoves = [counts, froms, tos]
+	return listOfMoves
+
+def _runCraneOperations(listOfStacks, listOfMoves):
+	stacks = listOfStacks.copy()
+	moves = listOfMoves.copy()
+	numberOfMoves = len(moves[0])
+	for index in range(numberOfMoves):
+		count = moves[0][index]
+		source = moves[1][index] - 1
+		dest = moves[2][index] - 1
+		for _ in range(count):
+			crate = stacks[source].pop()
+			stacks[dest].append(crate)
+	return stacks
+
+def _runCraneOperations2(listOfStacks, listOfMoves):
+	stacks = listOfStacks.copy()
+	moves = listOfMoves.copy()
+	numberOfMoves = len(moves[0])
+	for index in range(numberOfMoves):
+		count = moves[0][index]
+		source = moves[1][index] - 1
+		dest = moves[2][index] - 1
+		group = []
+		for _ in range(count):
+			crate = stacks[source].pop()
+			group.append(crate)
+		group.reverse
+		for _ in range(count):
+			crate = group.pop()
+			stacks[dest].append(crate)
+	return stacks
+
+def _printTopsOfStacks(stacks):
+	for stack in stacks:
+		print(stack[-1], end='')
+	print()
 
 def solve1(data):
 	crateData = _getCrateData(data)
 	startIndexForMoveData = _getStartIndexForMoveData(data)
 	moveData = _getMoveData(data, startIndexForMoveData)
-	emptyListOfStacks = _getEmptyListOfStacks(crateData)
-	listOfStacks = _populateListOfStacks(crateData, emptyListOfStacks)
-
+	listOfStacks = _populateListOfStacks(crateData)
+	listOfMoves = _populateListOfMoves(moveData)
+	finalListOfStacks = _runCraneOperations(listOfStacks, listOfMoves)
+	_printTopsOfStacks(finalListOfStacks)
 	return
 
 def solve2(data):
+	crateData = _getCrateData(data)
+	startIndexForMoveData = _getStartIndexForMoveData(data)
+	moveData = _getMoveData(data, startIndexForMoveData)
+	listOfStacks = _populateListOfStacks(crateData)
+	listOfMoves = _populateListOfMoves(moveData)
+	finalListOfStacks = _runCraneOperations2(listOfStacks, listOfMoves)
+	_printTopsOfStacks(finalListOfStacks)
 	return
 
 def main():
-	# Get arg from command line
-	args = sys.argv[1:]
-
 	# Get list of lines from file
-	with open(args[0], 'r', encoding='utf-8') as file:
+	filepath = os.path.realpath(os.path.dirname(__file__)) + '\\' + ''.join(sys.argv[1:])
+	with open(filepath, 'r', encoding='utf-8') as file:
 		lines = file.readlines()
 
 	# Trim newline characters off the ends
