@@ -6,15 +6,6 @@ Solution written by JJ Nunez.
 
 import os
 
-# Debug function to show raw string list
-# that we read in from the file
-def _debugListContents(message, data):
-	print(message)
-	for line in data:
-		print(line)
-	print('================')
-	return
-
 # Function to read the input data and return
 # a list of the lines of the first half of it
 def _getCrateData(data):
@@ -131,7 +122,7 @@ def _printTopsOfStacks(stacks):
 		print(stack[-1], end='')
 	print()
 
-def solve1(data):
+def _solve1(data):
 	crateData = _getCrateData(data)
 	startIndexForMoveData = _getStartIndexForMoveData(data)
 	moveData = _getMoveData(data, startIndexForMoveData)
@@ -141,7 +132,7 @@ def solve1(data):
 	_printTopsOfStacks(finalListOfStacks)
 	return
 
-def solve2(data):
+def _solve2(data):
 	crateData = _getCrateData(data)
 	startIndexForMoveData = _getStartIndexForMoveData(data)
 	moveData = _getMoveData(data, startIndexForMoveData)
@@ -151,33 +142,29 @@ def solve2(data):
 	_printTopsOfStacks(finalListOfStacks)
 	return
 
+def _readFile(fileName):
+	scriptDirectory = os.path.dirname(__file__)
+	filePath = os.path.join(scriptDirectory, fileName)
+	with open(filePath, 'r', encoding='utf-8') as file:
+		lines = file.readlines()
+	data = []
+	for line in lines:
+		data.append(line.replace('\n', ''))
+	return data
+
 def main():
-	# Get list of lines from file
 	sampleFileName = 'sample.txt'
 	inputFileName = 'input.txt'
-	scriptDirectory = os.path.dirname(__file__)
-	sampleFilePath = os.path.join(scriptDirectory, sampleFileName)
-	inputFilePath = os.path.join(scriptDirectory, inputFileName)
-
-	with open(sampleFilePath, 'r', encoding='utf-8') as file:
-		lines = file.readlines()
-	sampleData = []
-	for line in lines:
-		sampleData.append(line.replace('\n', ''))
-
-	with open(inputFilePath, 'r', encoding='utf-8') as file:
-		lines = file.readlines()
-	inputData = []
-	for line in lines:
-		inputData.append(line.replace('\n', ''))
+	sampleData = _readFile(sampleFileName)
+	inputData = _readFile(inputFileName)
 
 	print(sampleFileName)
-	solve1(sampleData)
-	solve2(sampleData)
+	_solve1(sampleData)
+	_solve2(sampleData)
 
 	print(inputFileName)
-	solve1(inputData)
-	solve2(inputData)
+	_solve1(inputData)
+	_solve2(inputData)
 
 # Allows execution only from command line
 # and not from import statements
