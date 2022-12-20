@@ -4,7 +4,6 @@ Day 5: Supply Stacks
 Solution written by JJ Nunez.
 """
 
-import sys
 import os
 
 # Debug function to show raw string list
@@ -154,17 +153,31 @@ def solve2(data):
 
 def main():
 	# Get list of lines from file
-	filepath = os.path.realpath(os.path.dirname(__file__)) + '\\' + ''.join(sys.argv[1:])
-	with open(filepath, 'r', encoding='utf-8') as file:
+	sampleFileName = 'sample.txt'
+	inputFileName = 'input.txt'
+	scriptDirectory = os.path.dirname(__file__)
+	sampleFilePath = os.path.join(scriptDirectory, sampleFileName)
+	inputFilePath = os.path.join(scriptDirectory, inputFileName)
+
+	with open(sampleFilePath, 'r', encoding='utf-8') as file:
 		lines = file.readlines()
-
-	# Trim newline characters off the ends
-	data = []
+	sampleData = []
 	for line in lines:
-		data.append(line.replace('\n', ''))
+		sampleData.append(line.replace('\n', ''))
 
-	solve1(data)
-	solve2(data)
+	with open(inputFilePath, 'r', encoding='utf-8') as file:
+		lines = file.readlines()
+	inputData = []
+	for line in lines:
+		inputData.append(line.replace('\n', ''))
+
+	print(sampleFileName)
+	solve1(sampleData)
+	solve2(sampleData)
+
+	print(inputFileName)
+	solve1(inputData)
+	solve2(inputData)
 
 # Allows execution only from command line
 # and not from import statements
