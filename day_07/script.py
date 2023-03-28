@@ -5,13 +5,15 @@ Day 7: No Space Left On Device
 Solution written by JJ Nunez.
 """
 
+"""
+Import statements
+"""
 import os
 
 """
 Custom classes
 """
 class Node:
-
 	def __init__(self, name, type, size, parent):
 		self.name = name
 		self.type = type
@@ -41,7 +43,7 @@ def _findSizesUnderLimit(node, limit, list):
 """
 Solver functions
 """
-def _solve1(data):
+def _solve(data):
 
 	# Using custom node class to build a directory tree
 	root = Node("/", "dir", 0, None)
@@ -78,35 +80,44 @@ def _solve1(data):
 			file_size = split_line[0]
 			c_node.children.append(Node(file_name, "file", int(file_size), c_node))
 
+	# Recursively calculate the directory sizes
 	_calculateSize(root)
+
+	# Find all directory nodes at or below 100000 in size
 	directory_list = _findSizesUnderLimit(root, 100000, [])
 
+	# PROBLEM 1 SOLUTION
 	total = 0
 	for node in directory_list:
 		total += node.size
 	print("The sum of the total sizes of all directories with a size of at most 100000:", total)
 
+	# Determine disk space, required space, and other parameters
 	disk_space = 70000000
 	required_space = 30000000
 	available_space = disk_space - root.size
 	minimum_delete_size = required_space - available_space
+
+	# Find all directories in the filesystem tree
 	directory_list = _findSizesUnderLimit(root, disk_space, [])
+
+	# Mark those which can be deleted to free up enough space for an update
 	candidates_for_deletion = []
 	for node in directory_list:
 		if node.size >= minimum_delete_size:
 			candidates_for_deletion.append(node)
 
+	# Find the smallest among delection candidates
 	for index, node in enumerate(candidates_for_deletion):
 		if index == 0:
 			smallest = node
-		else:
-			if node.size <= smallest.size:
+			continue
+		if node.size <= smallest.size:
 				smallest = node
+
+	# PROBLEM 2 SOLUTION
 	print("The smallest directory that, if deleted, would free up enough space on the filesystem to run the update is:", smallest.name, "at size", smallest.size)
 
-	return
-
-def _solve2(data):
 	return
 
 """
@@ -129,12 +140,10 @@ def main():
 	inputData = _readFile(inputFileName)
 
 	print(sampleFileName)
-	_solve1(sampleData)
-	_solve2(sampleData)
+	_solve(sampleData)
 
 	print(inputFileName)
-	_solve1(inputData)
-	_solve2(inputData)
+	_solve(inputData)
 
 # Allows execution only from command line
 # and not from import statements
