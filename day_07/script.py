@@ -32,7 +32,7 @@ def _calculateSize(node):
 
 def _findSizesUnderLimit(node, limit, list):
 	if node.size <= limit:
-		list.append(node.size)
+		list.append(node)
 	for child in node.children:
 		if child.type == "dir":
 			list = _findSizesUnderLimit(child, limit, list)
@@ -79,16 +79,32 @@ def _solve1(data):
 			c_node.children.append(Node(file_name, "file", int(file_size), c_node))
 
 	_calculateSize(root)
-	list = _findSizesUnderLimit(root, 100000, [])
+	directory_list = _findSizesUnderLimit(root, 100000, [])
 
 	total = 0
-	for size in list:
-		total += size
-	
+	for node in directory_list:
+		total += node.size
 	print("The sum of the total sizes of all directories with a size of at most 100000:", total)
 
-	return
+	disk_space = 70000000
+	required_space = 30000000
+	available_space = disk_space - root.size
+	minimum_delete_size = required_space - available_space
+	directory_list = _findSizesUnderLimit(root, disk_space, [])
+	candidates_for_deletion = []
+	for node in directory_list:
+		if node.size >= minimum_delete_size:
+			candidates_for_deletion.append(node)
 
+	for index, node in enumerate(candidates_for_deletion):
+		if index == 0:
+			smallest = node
+		else:
+			if node.size <= smallest.size:
+				smallest = node
+	print("The smallest directory that, if deleted, would free up enough space on the filesystem to run the update is:", smallest.name, "at size", smallest.size)
+
+	return
 
 def _solve2(data):
 	return
