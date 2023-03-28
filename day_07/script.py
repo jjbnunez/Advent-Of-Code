@@ -30,13 +30,13 @@ def _calculateSize(node):
 			node.size += _calculateSize(child)
 	return node.size
 
-def _findSizesUnderLimit(node, limit, dictionary):
+def _findSizesUnderLimit(node, limit, list):
 	if node.size <= limit:
-		dictionary[node.name] = node.size
+		list.append(node.size)
 	for child in node.children:
 		if child.type == "dir":
-			dictionary = _findSizesUnderLimit(child, limit, dictionary)
-	return dictionary
+			list = _findSizesUnderLimit(child, limit, list)
+	return list
 
 """
 Solver functions
@@ -79,10 +79,10 @@ def _solve1(data):
 			c_node.children.append(Node(file_name, "file", int(file_size), c_node))
 
 	_calculateSize(root)
-	dictionary = _findSizesUnderLimit(root, 100000, {})
+	list = _findSizesUnderLimit(root, 100000, [])
 
 	total = 0
-	for size in dictionary.values():
+	for size in list:
 		total += size
 	
 	print("The sum of the total sizes of all directories with a size of at most 100000:", total)
