@@ -16,6 +16,8 @@ Custom classes
 class Tree:
 	def __init__(self):
 		self.height = -1
+		self.row = -1
+		self.column = -1
 		self.viewLeft = -1 
 		self.viewRight = -1
 		self.viewUp = -1
@@ -104,19 +106,84 @@ def _createTreeObjectMatrix(data):
 	treeObjectMatrix = []
 	for i, line in enumerate(data):
 		treeObjectMatrix.append([])
-		for char in line:
+		for j, char in enumerate(line):
 			newTree = Tree()
 			newTree.height = int(char)
+			newTree.row = i
+			newTree.column = j
 			treeObjectMatrix[i].append(newTree)
 	return treeObjectMatrix
 
-def _findViewBounds(data, matrix):
+def _findViewBounds(data, tree):
 	leftBound = 0
 	upperBound = 0
-	rightBound = len(matrix[0])
-	lowerBound = len(matrix)
+	rightBound = len(data[0])-1
+	lowerBound = len(data)-1
+	
+	spacesFromLeft = tree.column
+	spacesFromRight = rightBound - tree.column
+	spacesFromTop = tree.row
+	spacesFromBottom = lowerBound - tree.row
 
-	return matrix
+	# Find visible trees to right
+	counter = 0
+	if tree.column == rightBound:
+		tree.viewRight = counter
+	else:
+		counter = 1
+		for i in range(tree.column+1, rightBound):
+			otherTreeHeight = int(data[tree.row][i])
+			if otherTreeHeight >= tree.height:
+				break
+			else:
+				counter += 1
+		tree.viewRight = counter
+	
+	# Find visible trees to the left
+	counter = 0
+	if tree.column == leftBound:
+		tree.viewLeft = counter
+	else:
+		counter = 1
+		for i in range(tree.column-1, leftBound, -1):
+			otherTreeHeight = int(data[tree.row][i])
+			if otherTreeHeight >= tree.height:
+				break
+			else:
+				counter += 1
+		tree.viewLeft = counter
+	
+	# Find visible trees to the top
+	counter = 0
+	if tree.row == upperBound:
+		tree.viewUp = 0
+	else:
+		counter = 1
+		for i in range(tree.row-1, upperBound, -1):
+			otherTreeHeight = int(data[i][tree.column])
+			if otherTreeHeight >= tree.height:
+				break
+			else:
+				counter += 1
+		tree.viewUp = counter
+	
+	# Find visible trees to the bottom
+	counter = 0
+	if tree.row == lowerBound:
+		tree.viewDown = 0
+	else:
+		counter = 1
+		for i in range(tree.row+1, lowerBound):
+			otherTreeHeight = int(data[i][tree.column])
+			if otherTreeHeight >= tree.height:
+				break
+			else:
+				counter += 1
+		tree.viewDown = counter
+
+	tree.calculateScenicScore()
+
+	return tree
 
 """
 Solver functions
@@ -141,7 +208,15 @@ def _solve(data):
 	print("The number of trees visible from outside the grid is:", total_visible_trees)
 
 	treeObjectMatrix = _createTreeObjectMatrix(data)
-
+	
+	# PROBLEM 2 SOLUTION
+	highest_scenic_score = -1
+	for i, row in enumerate(treeObjectMatrix):
+		for j, element in enumerate(row):
+			element = _findViewBounds(data, element)
+			if element.scenicScore > highest_scenic_score:
+				highest_scenic_score = element.scenicScore
+	print("The highest scenic score among all the trees provided is:", highest_scenic_score)
 
 	return
 
