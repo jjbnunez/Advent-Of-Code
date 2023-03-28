@@ -13,15 +13,25 @@ import os
 """
 Custom classes
 """
+class Tree:
+	def __init__(self):
+		self.height = -1
+		self.viewLeft = -1 
+		self.viewRight = -1
+		self.viewUp = -1
+		self.viewDown = -1
+		self.scenicScore = -1
+	def calculateScenicScore(self):
+		self.scenicScore = self.viewLeft * self.viewRight * self.viewUp * self.viewDown
+
 
 """
 Helper functions
 """
-
 def _debugPrint2dList(matrix):
 	for i, row in enumerate(matrix):
-		for char in row:
-			print(char, end="")
+		for element in row:
+			print(str(element), end="")
 		print("")
 	print("")
 	return
@@ -90,7 +100,22 @@ def _observeColumnFromBottom(data, matrix, colNum):
 			matrix[size-i-1][colNum] = 'y'
 	return matrix
 
-def _observeFromTop(data, matrix):
+def _createTreeObjectMatrix(data):
+	treeObjectMatrix = []
+	for i, line in enumerate(data):
+		treeObjectMatrix.append([])
+		for char in line:
+			newTree = Tree()
+			newTree.height = int(char)
+			treeObjectMatrix[i].append(newTree)
+	return treeObjectMatrix
+
+def _findViewBounds(data, matrix):
+	leftBound = 0
+	upperBound = 0
+	rightBound = len(matrix[0])
+	lowerBound = len(matrix)
+
 	return matrix
 
 """
@@ -114,6 +139,9 @@ def _solve(data):
 			if matrix[i][j] == 'y':
 				total_visible_trees += 1
 	print("The number of trees visible from outside the grid is:", total_visible_trees)
+
+	treeObjectMatrix = _createTreeObjectMatrix(data)
+
 
 	return
 
