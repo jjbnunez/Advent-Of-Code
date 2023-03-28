@@ -6,8 +6,18 @@ Solution written by JJ Nunez.
 """
 
 import os
-from collections import deque
-from node import Node
+
+"""
+Custom classes
+"""
+class Node:
+
+	def __init__(self, name, type, size, parent):
+		self.name = name
+		self.type = type
+		self.size = size
+		self.parent = parent
+		self.children = []
 
 """
 Helper functions
@@ -28,23 +38,6 @@ def _findSizesUnderLimit(node, limit, dictionary):
 			dictionary = _findSizesUnderLimit(child, limit, dictionary)
 	return dictionary
 
-
-"""
-def _execute(sublist, dirname):
-	workingdirsize = 0
-	# Loop over sublist until "$ cd .."
-	for index, line in enumerate(sublist):
-		if line == "$ cd ..":
-			print("Dir", dirname, "contains", workingdirsize, "bytes") 
-			return
-		elif line[:4] == "$ cd":
-			_execute(sublist[index:], line[5:])
-		elif line[0].isdigit():
-			splitline = line.split(" ")
-			workingdirsize += int(splitline[0])	
-	return
-"""
-	
 """
 Solver functions
 """
