@@ -1,41 +1,46 @@
 """
-Day 1: Calorie Counting
+Advent of Code 2023
+Day 1: Trebuchet?!
 
 Solution written by JJ Nunez.
 """
 
-file = open('input.txt', 'r', encoding="utf-8")
+import os
 
-lines = file.readlines()
+# Solver function
 
-subbed = []
-for sub in lines:
-	subbed.append(sub.replace('\n',''))
 
-sums = []
-sum = 0
-for sub in subbed:
-	if sub != '':
-		sum += int(sub)
-	else:
-		sums.append(sum)
-		sum = 0
+def _solve(data):
+    return
 
-print("Highest calorie sum is", max(sums))
+# Execution and File I/O
 
-copy = sums.copy()
 
-first = max(copy)
+def _readFile(fileName):
+    scriptDirectory = os.path.dirname(__file__)
+    filePath = os.path.join(scriptDirectory, fileName)
+    with open(filePath, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    data = []
+    for line in lines:
+        data.append(line.replace('\n', ''))
+    return data
 
-copy.remove(first)
 
-second = max(copy)
+def main():
+    sampleFileName = 'sample.txt'
+    inputFileName = 'input.txt'
+    sampleData = _readFile(sampleFileName)
+    inputData = _readFile(inputFileName)
 
-copy.remove(second)
+    print(sampleFileName)
+    _solve(sampleData)
 
-third = max(copy)
+    print(inputFileName)
+    _solve(inputData)
 
-print("First biggest calorie sum is", first)
-print("Second biggest calorie sum is", second)
-print("Third biggest calorie sum is", third)
-print("Total sum of calories among top three is", first + second + third)
+
+# Allows execution only from command line
+# and not from import statements
+if __name__ == '__main__':
+    main()
