@@ -8,7 +8,6 @@ Solution written by JJ Nunez.
 """
 Import statements
 """
-import os
 
 """
 Custom classes
@@ -17,44 +16,72 @@ Custom classes
 """
 Helper functions
 """
+
+
+
+
+import os
 def _debugPrint2dList(matrix):
-	for i, row in enumerate(matrix):
-		for element in row:
-			print(str(element), end="")
-		print("")
-	print("")
-	return
+    for i, row in enumerate(matrix):
+        for element in row:
+            print(str(element), end="")
+        print("")
+    print("")
+    return
+
+
+def _calculateBounds(data):
+    upperBound = 0
+    for line in data:
+        if line[:1] == "U":
+            upperBound += int(line[2:])
+        elif line[:1] == "D":
+            lowerBound
+
+
+def _createGrid(data):
+    grid = []
+    return grid
+
 
 """
 Solver functions
 """
+
+
 def _solve(data):
-	return
+    grid = _createGrid()
+    return
+
 
 """
 Execution and File I/O
 """
+
+
 def _readFile(fileName):
-	scriptDirectory = os.path.dirname(__file__)
-	filePath = os.path.join(scriptDirectory, fileName)
-	with open(filePath, 'r', encoding='utf-8') as file:
-		lines = file.readlines()
-	data = []
-	for line in lines:
-		data.append(line.replace('\n', ''))
-	return data
+    scriptDirectory = os.path.dirname(__file__)
+    filePath = os.path.join(scriptDirectory, fileName)
+    with open(filePath, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    data = []
+    for line in lines:
+        data.append(line.replace('\n', ''))
+    return data
+
 
 def main():
-	sampleFileName = 'sample.txt'
-	inputFileName = 'input.txt'
-	sampleData = _readFile(sampleFileName)
-	inputData = _readFile(inputFileName)
+    sampleFileName = 'sample.txt'
+    inputFileName = 'input.txt'
+    sampleData = _readFile(sampleFileName)
+    inputData = _readFile(inputFileName)
 
-	print(sampleFileName)
-	_solve(sampleData)
+    print(sampleFileName)
+    _solve(sampleData)
 
-	print(inputFileName)
-	_solve(inputData)
+    print(inputFileName)
+    _solve(inputData)
+
 
 # Allows execution only from command line
 # and not from import statements
