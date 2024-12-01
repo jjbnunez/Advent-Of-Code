@@ -11,6 +11,21 @@ import os
 Helper functions
 """
 
+def _hasDuplicatesAmongFour(a, b, c, d):
+	if a == b:
+		return True
+	if a == c:
+		return True
+	if a == d:
+		return True
+	if b == c:
+		return True
+	if b == d:
+		return True
+	if c == d:
+		return True
+	return False
+
 """
 Solver functions
 """
