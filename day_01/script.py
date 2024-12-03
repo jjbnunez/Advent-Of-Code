@@ -46,8 +46,30 @@ def _solve1(data):
 
 
 def _solve2(data):
-    datum = data[0]
-    numericStringIndices = []
+    # Create two empty lists
+    list0 = []
+    list1 = []
+
+    # Populate the lists with unsorted data
+    for datum in data:
+        pair = datum.split("   ")
+        list0.append(pair[0])
+        list1.append(pair[1])
+
+    # Set up the similarity score
+    similarity_score = 0
+
+    # Iterate over both lists
+    for item in list0:
+        instances = 0
+        for comparator in list1:
+            if item == comparator:
+                instances = instances + 1
+        current_score = int(item) * instances
+        similarity_score = similarity_score + current_score
+
+    # Print results
+    print(similarity_score)
 
 # Execution and File I/O
 
@@ -71,9 +93,11 @@ def main():
 
     print(sampleFileName)
     _solve1(sampleData)
+    _solve2(sampleData)
 
     print(inputFileName)
     _solve1(inputData)
+    _solve2(inputData)
 
 
 # Allows execution only from command line
