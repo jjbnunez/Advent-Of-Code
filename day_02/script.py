@@ -14,7 +14,48 @@ import os
 # Solver functions
 
 def _solve1(data):
-    print(data[0])
+    reports = []
+    for datum in data:
+        report = datum.split(" ")
+        reports.append(report)
+
+    safe_reports = 0
+    for report in reports:
+        is_safe = True
+        is_ascending = False
+        is_descending = False
+        previous = -1
+        current = -1
+        for level in report:
+            if previous == -1:
+                previous = int(level)
+                continue
+            if previous != -1 and current == -1:
+                current = int(level)
+                if previous < current:
+                    is_ascending = True
+                if previous > current:
+                    is_descending = True
+                difference = previous - current
+                if difference == 0 or difference > 3 or difference < -3:
+                    is_safe = False
+                continue
+            if previous != -1 and current != -1:
+                previous = current
+                current = int(level)
+                if previous < current:
+                    is_ascending = True
+                if previous > current:
+                    is_descending = True
+                difference = previous - current
+                if difference == 0 or difference > 3 or difference < -3:
+                    is_safe = False
+        if is_ascending == True and is_descending == True:
+            is_safe = False
+        if is_safe == True:
+            safe_reports = safe_reports + 1
+
+    print(safe_reports)
 
 
 def _solve2(data):
@@ -42,11 +83,11 @@ def main():
 
     print(sampleFileName)
     _solve1(sampleData)
-    _solve2(sampleData)
+    # _solve2(sampleData)
 
     print(inputFileName)
     _solve1(inputData)
-    _solve2(inputData)
+    # _solve2(inputData)
 
 
 # Allows execution only from command line
