@@ -9,9 +9,42 @@ import os
 
 
 # Helper functions and classes
-
+def _isReportSafe(report):
+    is_safe = True
+    is_ascending = False
+    is_descending = False
+    previous = -1
+    current = -1
+    for level in report:
+        if previous == -1:
+            previous = int(level)
+            continue
+        if previous != -1 and current == -1:
+            current = int(level)
+            if previous < current:
+                is_ascending = True
+            if previous > current:
+                is_descending = True
+            difference = previous - current
+            if difference == 0 or difference > 3 or difference < -3:
+                is_safe = False
+            continue
+        if previous != -1 and current != -1:
+            previous = current
+            current = int(level)
+            if previous < current:
+                is_ascending = True
+            if previous > current:
+                is_descending = True
+            difference = previous - current
+            if difference == 0 or difference > 3 or difference < -3:
+                is_safe = False
+    if is_ascending == True and is_descending == True:
+        is_safe = False
+    return is_safe
 
 # Solver functions
+
 
 def _solve1(data):
     reports = []
@@ -21,38 +54,7 @@ def _solve1(data):
 
     safe_reports = 0
     for report in reports:
-        is_safe = True
-        is_ascending = False
-        is_descending = False
-        previous = -1
-        current = -1
-        for level in report:
-            if previous == -1:
-                previous = int(level)
-                continue
-            if previous != -1 and current == -1:
-                current = int(level)
-                if previous < current:
-                    is_ascending = True
-                if previous > current:
-                    is_descending = True
-                difference = previous - current
-                if difference == 0 or difference > 3 or difference < -3:
-                    is_safe = False
-                continue
-            if previous != -1 and current != -1:
-                previous = current
-                current = int(level)
-                if previous < current:
-                    is_ascending = True
-                if previous > current:
-                    is_descending = True
-                difference = previous - current
-                if difference == 0 or difference > 3 or difference < -3:
-                    is_safe = False
-        if is_ascending == True and is_descending == True:
-            is_safe = False
-        if is_safe == True:
+        if _isReportSafe(report):
             safe_reports = safe_reports + 1
 
     print(safe_reports)
