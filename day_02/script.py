@@ -6,9 +6,11 @@ Solution written by JJ Nunez.
 """
 
 import os
-
+from copy import deepcopy
 
 # Helper functions and classes
+
+
 def _isReportSafe(report):
     is_safe = True
     is_ascending = False
@@ -61,7 +63,28 @@ def _solve1(data):
 
 
 def _solve2(data):
-    print(data[0])
+    reports = []
+    for datum in data:
+        report = datum.split(" ")
+        reports.append(report)
+
+    safe_reports = 0
+    for report in reports:
+        if _isReportSafe(report):
+            safe_reports = safe_reports + 1
+            continue
+        else:
+            safety_array = []
+            for index, level in enumerate(report):
+                dampened_report = deepcopy(report)
+                dampened_report.pop(index)
+                safety_array.append(_isReportSafe(dampened_report))
+            for value in safety_array:
+                if value == True:
+                    safe_reports = safe_reports + 1
+                    break
+
+    print(safe_reports)
 
     # Execution and File I/O
 
@@ -85,11 +108,11 @@ def main():
 
     print(sampleFileName)
     _solve1(sampleData)
-    # _solve2(sampleData)
+    _solve2(sampleData)
 
     print(inputFileName)
     _solve1(inputData)
-    # _solve2(inputData)
+    _solve2(inputData)
 
 
 # Allows execution only from command line
