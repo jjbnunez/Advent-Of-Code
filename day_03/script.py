@@ -6,6 +6,7 @@ Solution written by JJ Nunez.
 """
 
 import os
+import re
 from copy import deepcopy
 
 ################################################
@@ -15,42 +16,56 @@ from copy import deepcopy
 ################################################
 
 
-def _identifyMulStarter(datum_substring):
-    print(datum_substring)
-    for index, character in enumerate(datum_substring):
-        if index == 0 and character != "m":
-            return False
-        if index == 1 and character != "u":
-            return False
-        if index == 2 and character != "l":
-            return False
-        if index == 3 and character != "(":
-            return False
-    return True
+def _getValidMulOperator(datum_substring):
+    regex_pattern = "^mul\([0-9]{1,3},[0-9]{1,3}\)"
+    match_found = re.search(regex_pattern, datum_substring)
+    if match_found:
+        return match_found.group(0)
+    else:
+        return None
 
 
-def _identifyValidOperator(datum_substring):
-    for index, character in enumerate(datum_substring):
+def _getMulOperands(mul_string):
+    regex_pattern = "[0-9]{1,3},[0-9]{1,3}"
+    pairing = re.search(regex_pattern, mul_string).group(0)
+    return pairing.split(",")
 
-        # def _isReportSafe(report):
 
-        ################################################
-        #                                              #
-        #               Solver functions               #
-        #                                              #
-        ################################################
+# def _isReportSafe(report):
+
+################################################
+#                                              #
+#               Solver functions               #
+#                                              #
+################################################
 
 
 def _solve1(data):
     data_copy = deepcopy(data)
 
+    list_of_operands = []
     for datum in data_copy:
         while len(datum) > 7:
-            if _identifyMulStarter(datum):
-                print("DEBUG: 'mul(' starter encountered!!!")
-                _identifyValidOperator(datum)
-
+            search_result = _getValidMulOperator(datum)
+            if search_result == None:
+                datum = datum[1:]
+                continue
+            operands = _getMulOperands(search_result)
+            if operands == None:
+                datum = datum[1:]
+                continue
+            list_of_operands.append(operands)
             datum = datum[1:]
+
+    sum_of_multiplications = 0
+
+    for pair in list_of_operands:
+        operand0 = int(pair[0])
+        operand1 = int(pair[1])
+        result = operand0 * operand1
+        sum_of_multiplications = sum_of_multiplications + result
+
+    print(sum_of_multiplications)
 
 
 # def _solve2(data):
@@ -85,7 +100,7 @@ def main():
     # _solve2(sampleData)
 
     print(inputFileName)
-    # _solve1(inputData)
+    _solve1(inputData)
     # _solve2(inputData)
 
 
