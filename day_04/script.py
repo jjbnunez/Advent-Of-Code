@@ -15,8 +15,17 @@ from copy import deepcopy
 ################################################
 
 
-def _helperFunction(data):
-    data_copy = deepcopy(data)
+def _getStraightRight(data, horizontal_start, vertical_start):
+    horizontal_bound = len(data[0])-1
+    horizontal_position_1 = horizontal_start
+    horizontal_position_2 = horizontal_start + 1
+    horizontal_position_3 = horizontal_start + 2
+    horizontal_position_4 = horizontal_start + 3
+    vertical_bound = len(data) - 1
+    if vertical_start > vertical_bound or vertical_start < 0:
+        print("ERROR: vertical starting point is out of bounds")
+        return ""
+
 
 ################################################
 #                                              #
