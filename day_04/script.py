@@ -15,16 +15,49 @@ from copy import deepcopy
 ################################################
 
 
-def _getStraightRight(data, horizontal_start, vertical_start):
-    horizontal_bound = len(data[0])-1
-    horizontal_position_1 = horizontal_start
-    horizontal_position_2 = horizontal_start + 1
-    horizontal_position_3 = horizontal_start + 2
-    horizontal_position_4 = horizontal_start + 3
-    vertical_bound = len(data) - 1
-    if vertical_start > vertical_bound or vertical_start < 0:
+def _xmas_string_exists(data, x_start, y_start, x_step, y_step):
+
+    # Check if parameters are good before doing work
+
+    if x_step > 1 or x_step < -1:
+        print("ERROR: horizontal step is invalid")
+        return 0
+
+    if y_step > 1 or y_step < -1:
+        print("ERROR: vertical step is invalid")
+        return 0
+
+    y_bound = len(data) - 1
+    if y_start > y_bound or y_start < 0:
         print("ERROR: vertical starting point is out of bounds")
-        return ""
+        return 0
+
+    x_bound = len(data[y_start]) - 1
+    if x_start > x_bound or x_start < 0:
+        print("ERROR: horizontal starting point is out of bounds")
+        return 0
+
+    # Stop doing work if things will come out of bounds
+
+    if x_step == 1 and x_start + 3 > x_bound:
+        return 0
+    if x_step == -1 and x_start - 3 < 0:
+        return 0
+    if y_step == 1 and y_start + 3 > y_bound:
+        return 0
+    if y_step == -1 and y_start - 3 < 0:
+        return 0
+
+    string = ""
+    for i in range(4):
+        x = x_start + (i * x_step) if x_step != 0 else x_start
+        y = y_start + (i * y_step) if y_step != 0 else y_start
+        string = string + data[y][x]
+
+    if string == "XMAS":
+        return 1
+    else:
+        return 0
 
 
 ################################################
@@ -36,6 +69,35 @@ def _getStraightRight(data, horizontal_start, vertical_start):
 
 def _solve1(data):
     data_copy = deepcopy(data)
+    xmas_occurrences = 0
+    for y in range(len(data_copy)):
+        for x in range(len(data_copy[y])):
+            # straight right
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, 1, 0)
+            # down right
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, 1, 1)
+            # straight down
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, 0, 1)
+            # down left
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, -1, 1)
+            # straight left
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, -1, 0)
+            # up left
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, -1, -1)
+            # straight up
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, 0, -1)
+            # up right
+            xmas_occurrences = xmas_occurrences + \
+                _xmas_string_exists(data_copy, x, y, 1, -1)
+
+    print("TOTAL XMAS OCCURRENCES ", xmas_occurrences)
 
 
 def _solve2(data):
@@ -70,7 +132,7 @@ def main():
     # _solve2(sampleData)
 
     print(inputFileName)
-    # _solve1(inputData)
+    _solve1(inputData)
     # _solve2(inputData)
 
 
