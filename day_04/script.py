@@ -60,6 +60,10 @@ def _xmas_string_exists(data, x_start, y_start, x_step, y_step):
         return 0
 
 
+def _cross_mas_string_exists(data, x_start, y_start):
+    return True
+
+
 ################################################
 #                                              #
 #               Solver functions               #
@@ -72,6 +76,8 @@ def _solve1(data):
     xmas_occurrences = 0
     for y in range(len(data_copy)):
         for x in range(len(data_copy[y])):
+            if data[y][x] != "X":
+                continue
             # straight right
             xmas_occurrences = xmas_occurrences + \
                 _xmas_string_exists(data_copy, x, y, 1, 0)
