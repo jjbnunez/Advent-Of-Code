@@ -61,7 +61,33 @@ def _xmas_string_exists(data, x_start, y_start, x_step, y_step):
 
 
 def _cross_mas_string_exists(data, x_start, y_start):
-    return True
+
+    # check if parameters are good before doing work
+
+    y_bound = len(data) - 1
+    if y_start >= y_bound or y_start < 1:
+        # print("ERROR: vertical starting point puts grid out of bounds")
+        return 0
+
+    x_bound = len(data[y_start]) - 1
+    if x_start >= x_bound or x_start < 1:
+        # print("ERROR: horizontal starting point puts grid out of bounds")
+        return 0
+
+    # do work
+
+    string1 = data[y_start - 1][x_start - 1]
+    string1 = string1 + data[y_start][x_start]
+    string1 = string1 + data[y_start + 1][x_start + 1]
+
+    string2 = data[y_start + 1][x_start - 1]
+    string2 = string2 + data[y_start][x_start]
+    string2 = string2 + data[y_start - 1][x_start + 1]
+
+    if string1 == "MAS" or string1 == "SAM":
+        if string2 == "MAS" or string2 == "SAM":
+            return 1
+    return 0
 
 
 ################################################
@@ -108,6 +134,15 @@ def _solve1(data):
 
 def _solve2(data):
     data_copy = deepcopy(data)
+    cross_mas_occurrences = 0
+    for y in range(len(data_copy)):
+        for x in range(len(data_copy[y])):
+            if data[y][x] != "A":
+                continue
+            cross_mas_occurrences = cross_mas_occurrences + \
+                _cross_mas_string_exists(data_copy, x, y)
+
+    print("TOTAL CROSSMAS OCCURRENCES", cross_mas_occurrences)
 
 ################################################
 #                                              #
@@ -135,11 +170,11 @@ def main():
 
     print(sampleFileName)
     _solve1(sampleData)
-    # _solve2(sampleData)
+    _solve2(sampleData)
 
     print(inputFileName)
     _solve1(inputData)
-    # _solve2(inputData)
+    _solve2(inputData)
 
 
 # Allows execution only from command line
