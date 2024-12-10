@@ -129,7 +129,7 @@ def _solve1(data):
             xmas_occurrences = xmas_occurrences + \
                 _xmas_string_exists(data_copy, x, y, 1, -1)
 
-    print("TOTAL XMAS OCCURRENCES ", xmas_occurrences)
+    print("TOTAL XMAS OCCURRENCES", xmas_occurrences)
 
 
 def _solve2(data):
